@@ -1,0 +1,4 @@
+# Skrip dan konfigurasi server harus berakhir baris LF agar berjalan di Linux
+*.sh text eol=lf
+deploy/*.conf text eol=lf
+deploy/env.produksi.contoh text eol=lf
