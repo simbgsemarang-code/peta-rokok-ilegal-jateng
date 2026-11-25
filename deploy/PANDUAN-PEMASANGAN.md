@@ -24,6 +24,15 @@ bash periksa-server.sh rokok.sipadi-jateng.my.id
 
 Repo ini **privat**, jadi berkas tidak bisa diunduh dengan `curl` tanpa login. Salin isi `deploy/periksa-server.sh` ke server (tempel ke `nano periksa-server.sh`, atau kirim dengan `scp`), atau lakukan langkah 3 lebih dulu lalu jalankan `bash /var/www/peta/deploy/periksa-server.sh`.
 
+### Catatan khusus VPS Indonesia (vpsindonesia.co.id): IP bersama
+
+- **SSH memakai port non-standar** dari panel, mis. `ssh -p 20199 root@IP_VPS` (port 22 pada IP yang sama milik server lain, jangan dipakai).
+- **IP bawaan dipakai bersama beberapa VPS.** Port 80/443 pada IP itu tidak langsung menuju VPS Anda (halaman IP menyatakan hal ini). Pilih salah satu:
+  1. **IP Dedicated** (add-on sekitar Rp15.000 per bulan, minta lewat panel atau dukungan): VPS punya IPv4 sendiri sehingga port 80/443 langsung sampai. **Paling sederhana dan paling andal; disarankan.**
+  2. **Fitur "Domain" di detail VPS (gratis):** arahkan catatan A ke IP bersama, lalu daftarkan `rokok.sipadi-jateng.my.id` di detail VPS → Domain; port 80/443 untuk domain itu diteruskan otomatis. Kekurangannya: nginx di VPS mungkin melihat alamat penerus, bukan alamat pengunjung, sehingga pembatas login (per IP) menjadi kurang efektif; cara kerja HTTPS (diteruskan apa adanya atau diakhiri di penerus) harus diuji.
+- Catatan A diisi dengan IP yang berlaku untuk pilihan di atas (IP khusus bila membeli, IP bersama bila memakai fitur Domain).
+- Firewall `pasang.sh` otomatis mengizinkan port SSH yang dipakai sshd; jangan menutup port itu secara manual.
+
 ## 2. Mengarahkan subdomain ke VPS (DNS)
 
 Subdomain cukup diarahkan dengan satu catatan **A** ke IP VPS.

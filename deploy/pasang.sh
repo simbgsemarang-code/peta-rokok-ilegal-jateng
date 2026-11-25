@@ -111,7 +111,14 @@ systemctl enable --now nginx
 systemctl reload nginx
 
 info "8/8 Firewall (SSH, HTTP, HTTPS) dan cadangan harian"
-ufw allow OpenSSH >/dev/null
+# Buka SEMUA port yang dipakai sshd (penyedia dapat memakai port non-standar, mis. 20199) agar tidak terkunci
+SSH_PORTS="$(sshd -T 2>/dev/null | awk '$1=="port" {print $2}')"
+[[ -n "${SSH_CONNECTION:-}" ]] && SSH_PORTS="$SSH_PORTS $(echo "$SSH_CONNECTION" | awk '{print $4}')"
+[[ -n "${SSH_PORTS// /}" ]] || SSH_PORTS=22
+for p in $(echo "$SSH_PORTS" | tr ' ' '\n' | sort -u); do
+  ufw allow "$p/tcp" >/dev/null
+  echo "Firewall: port SSH $p diizinkan."
+done
 ufw allow 'Nginx Full' >/dev/null
 ufw --force enable >/dev/null
 install -m 0755 "$APP_DIR/deploy/cadangkan.sh" /usr/local/sbin/peta-cadangkan

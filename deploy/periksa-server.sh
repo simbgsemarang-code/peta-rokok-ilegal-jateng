@@ -16,6 +16,16 @@ echo "Disk /    : $(df -h / | awk 'NR==2 {print $2" total, "$4" bebas"}')"
 echo "Alamat IP : $(hostname -I 2>/dev/null)"
 echo "Pengguna  : $(id -un) (uid $(id -u))  | sudo: $(sudo -n true 2>/dev/null && echo ya || echo 'perlu kata sandi/tidak ada')"
 
+baris "SSH dan jaringan (apakah IP bersama/NAT?)"
+echo "Port sshd : $(sshd -T 2>/dev/null | awk '$1=="port" {printf "%s ", $2}')"
+echo "Koneksi SSH ini (klien port-server): ${SSH_CONNECTION:-tidak tersedia}"
+echo "Alamat IPv4 pada antarmuka:"
+ip -4 -o addr show scope global 2>/dev/null | awk '{print "  "$2": "$4}'
+if ip -4 -o addr show scope global 2>/dev/null | grep -Eq 'inet (10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)'; then
+  echo "PERHATIAN: antarmuka memakai alamat PRIBADI. Server ini kemungkinan berada di belakang NAT/IP bersama:"
+  echo "  port 80/443 dari luar tidak otomatis sampai ke sini (butuh IP khusus atau fitur teruskan-domain dari penyedia)."
+fi
+
 baris "Layanan web dan port terbuka"
 for s in nginx apache2 httpd caddy; do ada "$s" && echo "terpasang : $s ($(systemctl is-active "$s" 2>/dev/null))"; done
 (ss -tlnp 2>/dev/null || netstat -tlnp 2>/dev/null) | awk 'NR==1 || /:(22|80|443|3306|5432|8080)\s/' | head -20
