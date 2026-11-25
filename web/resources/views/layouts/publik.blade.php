@@ -8,6 +8,7 @@
 <meta property="og:title" content="@yield('judul', config('publik.nama_panjang')) — {{ config('publik.nama') }}">
 <meta property="og:site_name" content="{{ config('publik.nama') }}">
 <meta property="og:type" content="website">
+@include('partials.ikon')
 <link rel="stylesheet" href="{{ asset('css/publik.css') }}">
 @stack('kepala')
 </head>
