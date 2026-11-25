@@ -24,11 +24,11 @@ p { margin: 0 0 1em; }
 .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .nav-in { max-width: var(--maks); margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; }
 .merek { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--navy); min-width: 0; }
-.merek .logo { display: flex; gap: 6px; align-items: center; }
-.merek .logo img { height: 42px; width: auto; }
-.merek .nama { display: flex; flex-direction: column; line-height: 1.2; }
-.merek .nama b { font-size: 1rem; }
-.merek .nama small { color: var(--muted); font-size: .76rem; }
+.merek .logo { display: flex; gap: 6px; align-items: center; flex: 0 0 auto; }
+.merek .logo img { height: 42px; width: auto; flex: 0 0 auto; }
+.merek .nama { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.merek .nama b { font-size: 1.12rem; letter-spacing: .04em; }
+.merek .nama small { color: var(--muted); font-size: .74rem; line-height: 1.25; }
 .menu { margin-left: auto; display: flex; align-items: center; gap: 4px; }
 .menu a { text-decoration: none; color: var(--ink); padding: 8px 12px; border-radius: 9px; font-weight: 600; font-size: .95rem; white-space: nowrap; }
 .menu a:hover { background: var(--bg); color: var(--navy); }

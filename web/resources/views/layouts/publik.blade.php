@@ -17,7 +17,7 @@
   <div class="nav-in">
     <a class="merek" href="{{ route('beranda') }}" aria-label="Beranda">
       <span class="logo"><img src="{{ asset('img/logo-jateng.png') }}" alt="Logo Provinsi Jawa Tengah"><img src="{{ asset('img/logo-satpolpp.png') }}" alt="Logo Satpol PP"></span>
-      <span class="nama"><b>{{ config('publik.nama') }}</b><small>{{ config('publik.nama_panjang') }} · {{ config('publik.instansi') }}</small></span>
+      <span class="nama"><b>{{ config('publik.nama') }}</b><small>{{ config('publik.nama_panjang') }}</small></span>
     </a>
     <input type="checkbox" id="menu" class="menu-cek" aria-hidden="true">
     <label for="menu" class="hamb" aria-label="Buka menu">☰</label>
