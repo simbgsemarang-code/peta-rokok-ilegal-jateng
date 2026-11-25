@@ -1,6 +1,6 @@
 -- =====================================================================
 -- Skema basis data
--- Aplikasi Peta Digital Geospasial Peredaran Rokok Ilegal Jawa Tengah
+-- SIPATRI: Aplikasi Peta Digital Geospasial Peredaran Rokok Ilegal Jawa Tengah
 -- PostgreSQL 15 ke atas, PostGIS 3. Sistem koordinat: WGS84 (EPSG:4326)
 -- Kode wilayah: Kepmendagri (mis. kab '33.20', kec '33.20.01', desa '33.20.01.2001')
 --

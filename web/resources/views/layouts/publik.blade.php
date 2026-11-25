@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>@yield('judul', 'Peta Peredaran Rokok Ilegal Jawa Tengah') — {{ config('publik.instansi') }}</title>
+<title>@yield('judul', config('publik.nama_panjang')) — {{ config('publik.nama') }}</title>
 <meta name="description" content="@yield('deskripsi', 'Informasi publik tentang pemetaan dan penindakan peredaran rokok ilegal di 35 kabupaten/kota Jawa Tengah oleh '.config('publik.instansi').'.')">
-<meta property="og:title" content="@yield('judul', 'Peta Peredaran Rokok Ilegal Jawa Tengah')">
+<meta property="og:title" content="@yield('judul', config('publik.nama_panjang')) — {{ config('publik.nama') }}">
+<meta property="og:site_name" content="{{ config('publik.nama') }}">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="{{ asset('css/publik.css') }}">
 @stack('kepala')
@@ -16,7 +17,7 @@
   <div class="nav-in">
     <a class="merek" href="{{ route('beranda') }}" aria-label="Beranda">
       <span class="logo"><img src="{{ asset('img/logo-jateng.png') }}" alt="Logo Provinsi Jawa Tengah"><img src="{{ asset('img/logo-satpolpp.png') }}" alt="Logo Satpol PP"></span>
-      <span class="nama"><b>Peta Peredaran Rokok Ilegal</b><small>{{ config('publik.instansi') }}</small></span>
+      <span class="nama"><b>{{ config('publik.nama') }}</b><small>{{ config('publik.nama_panjang') }} · {{ config('publik.instansi') }}</small></span>
     </a>
     <input type="checkbox" id="menu" class="menu-cek" aria-hidden="true">
     <label for="menu" class="hamb" aria-label="Buka menu">☰</label>
@@ -44,7 +45,7 @@
         <div class="logo"><img src="{{ asset('img/logo-jateng.png') }}" alt=""><img src="{{ asset('img/logo-satpolpp.png') }}" alt=""></div>
         <b style="color:#fff">{{ config('publik.instansi') }}</b><br>
         <span>{{ config('publik.unit') }}</span>
-        <p style="margin-top:12px">Pemetaan peredaran rokok ilegal di Jawa Tengah, didukung Dana Bagi Hasil Cukai Hasil Tembakau (DBHCHT) Tahun Anggaran 2026.</p>
+        <p style="margin-top:12px"><b style="color:#fff">{{ config('publik.nama') }}</b>: {{ config('publik.nama_panjang') }}, didukung Dana Bagi Hasil Cukai Hasil Tembakau (DBHCHT) Tahun Anggaran 2026.</p>
       </div>
       <div>
         <h4>Halaman</h4>

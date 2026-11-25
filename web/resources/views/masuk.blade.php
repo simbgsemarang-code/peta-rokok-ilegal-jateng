@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Masuk — Peta Rokok Ilegal Jateng</title>
+<title>Masuk — {{ config('publik.nama') }}</title>
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
 <div class="masuk">
   <form class="kotak" method="post" action="{{ route('masuk') }}">
     @csrf
-    <h1>Peta Peredaran Rokok Ilegal<br>Jawa Tengah</h1>
+    <h1>{{ config('publik.nama') }}</h1>
+    <div style="font-weight:600;color:var(--navy);margin-top:2px">{{ config('publik.nama_panjang') }}</div>
     <p>Satpol PP Provinsi Jawa Tengah · Bidang Gakkumda. Masuk dengan akun yang diberikan admin.</p>
     @if($errors->any())<div class="notif bad">{{ $errors->first() }}</div>@endif
     <div style="margin-bottom:12px">

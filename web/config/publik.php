@@ -5,6 +5,10 @@
  * Nilai dapat diubah lewat berkas .env tanpa mengubah kode.
  */
 return [
+    // Nama aplikasi dan penjelasnya (tampil di navbar, judul tab, halaman masuk, dan footer)
+    'nama' => env('PUBLIK_NAMA_APLIKASI', 'SIPATRI'),
+    'nama_panjang' => env('PUBLIK_NAMA_PANJANG', 'Peta Peredaran Rokok Ilegal Jawa Tengah'),
+
     'instansi' => env('PUBLIK_INSTANSI', 'Satpol PP Provinsi Jawa Tengah'),
     'unit' => env('PUBLIK_UNIT', 'Bidang Penegakan Peraturan Perundang-undangan Daerah (Gakkumda)'),
 

@@ -1,4 +1,4 @@
-# Basis Data Aplikasi Peta Digital Peredaran Rokok Ilegal Jawa Tengah
+# Basis Data SIPATRI: Peta Peredaran Rokok Ilegal Jawa Tengah
 
 Rancangan skema PostgreSQL + PostGIS untuk aplikasi yang diusulkan pada Bab V Laporan Pendahuluan.
 Status: **sudah diuji pada PostgreSQL 17 + PostGIS 3.5.2 (Docker), 25 November 2026**, termasuk fungsi spasial, indeks GIST, trigger, dan batas desa/kelurahan. Rincian uji di [Hasil uji](#hasil-uji).

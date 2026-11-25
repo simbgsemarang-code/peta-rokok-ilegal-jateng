@@ -1,4 +1,4 @@
-# Panduan pemasangan di VPS: rokok.sipadi-jateng.my.id
+# Panduan pemasangan SIPATRI di VPS: rokok.sipadi-jateng.my.id
 
 Sistem ini membutuhkan **PostgreSQL + PostGIS** sehingga tidak dapat berjalan di hosting cPanel bersama yang hanya menyediakan MySQL. Panduan ini memasangnya di **VPS Ubuntu 24.04 LTS** (tanpa Docker) dan mengarahkan subdomain ke VPS itu. SIPADI di hosting cPanel tidak tersentuh.
 

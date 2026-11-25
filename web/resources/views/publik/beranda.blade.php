@@ -5,7 +5,7 @@
 <section class="hero">
   <div class="wadah grid">
     <div>
-      <span class="lencana">Jawa Tengah · 35 kabupaten/kota · DBHCHT TA 2026</span>
+      <span class="lencana">{{ config('publik.nama') }} · Jawa Tengah · 35 kabupaten/kota · DBHCHT TA 2026</span>
       <h1>Bersama menjaga Jawa Tengah dari peredaran rokok ilegal</h1>
       <p class="lead">Informasi publik tentang upaya {{ config('publik.instansi') }} memetakan dan menindak peredaran rokok tanpa pita cukai, berpita palsu, atau berpita bekas, demi penerimaan daerah dan perlindungan pelaku usaha yang taat aturan.</p>
       <div class="aksi">

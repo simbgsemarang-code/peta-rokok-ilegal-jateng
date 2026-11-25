@@ -6,7 +6,7 @@
 <div class="isi"><div class="wadah"><div class="teks">
   <h2>Latar belakang</h2>
   <p>Rokok polos, berpita cukai palsu, dan berpita bekas masih beredar di Jawa Tengah. Peredarannya mengurangi penerimaan cukai dan DBHCHT serta menekan industri hasil tembakau yang taat aturan. Penindakan selama ini cenderung bersifat sebagian-sebagian karena belum ada gambaran sistematis tentang wilayah rawan, jalur distribusi, dan besarnya kerugian.</p>
-  <p>Karena itu {{ config('publik.instansi') }}, melalui {{ config('publik.unit') }}, melaksanakan kegiatan <b>Pembuatan Peta Peredaran Rokok Ilegal di Jawa Tengah</b> pada Tahun Anggaran 2026 dengan pendanaan DBHCHT.</p>
+  <p>Karena itu {{ config('publik.instansi') }}, melalui {{ config('publik.unit') }}, melaksanakan kegiatan <b>Pembuatan Peta Peredaran Rokok Ilegal di Jawa Tengah</b> pada Tahun Anggaran 2026 dengan pendanaan DBHCHT. Hasilnya disajikan melalui aplikasi <b>{{ config('publik.nama') }}</b>.</p>
 
   <h2>Tujuan</h2>
   <ol>

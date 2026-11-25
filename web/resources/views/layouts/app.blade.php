@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>@yield('judul', 'Peta') — Peta Rokok Ilegal Jateng</title>
+<title>@yield('judul', 'Peta') — {{ config('publik.nama') }}</title>
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 @stack('kepala')
 </head>
@@ -12,7 +12,7 @@
 @php $p = auth()->user(); @endphp
 <div class="app">
   <aside class="side">
-    <div class="brand"><b>Peta Peredaran<br>Rokok Ilegal</b><span>Jawa Tengah · Satpol PP</span></div>
+    <div class="brand"><b style="font-size:19px;letter-spacing:.04em">{{ config('publik.nama') }}</b><span>Peta Peredaran Rokok Ilegal<br>Jawa Tengah · Satpol PP</span></div>
     <nav class="nav">
       <a href="{{ route('peta') }}" class="{{ request()->routeIs('peta') ? 'aktif' : '' }}">Peta penindakan</a>
       <a href="{{ route('rekap') }}" class="{{ request()->routeIs('rekap') ? 'aktif' : '' }}">Rekap penindakan</a>

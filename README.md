@@ -1,4 +1,4 @@
-# Aplikasi Peta Digital Peredaran Rokok Ilegal Jawa Tengah
+# SIPATRI: Peta Peredaran Rokok Ilegal Jawa Tengah
 
 Aplikasi web (Laravel 12, PHP 8.2) di atas basis data PostgreSQL + PostGIS pada folder [db](db/README.md).
 Status: **versi lokal untuk pengembangan, sudah berjalan penuh di Docker + PostGIS 3.5.2.** Diuji 25 November 2026: login dan hak akses, impor Excel, rekap, estimasi kerugian, skor, rekomendasi, pengaturan, unduh Excel, log audit, halaman peta (35 batas kab/kota valid, popup, filter), trigger pengisi desa dari titik GPS, dan kueri radius. Kontainer `peta-db` berisi skema, data referensi, dan data gabungan operasi 2023–2026 yang sudah diimpor dan disimpan.
