@@ -1,0 +1,44 @@
+# Rahasia dan konfigurasi lokal
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+akun_uji*.txt
+
+# Dependensi dan hasil bangun (dipasang ulang dengan composer install)
+web/vendor/
+web/node_modules/
+web/public/hot
+web/public/storage
+
+# Berkas runtime Laravel
+web/storage/*.key
+web/storage/logs/*
+web/storage/framework/cache/*
+web/storage/framework/sessions/*
+web/storage/framework/views/*
+web/storage/framework/testing/*
+!web/storage/**/.gitignore
+web/bootstrap/cache/*.php
+
+# Alat unduhan dan keluaran sementara
+alat/composer.phar
+alat/composer-home/
+*.log
+muat_batas_desa.sql
+
+# Data operasi dan dokumen yang memuat nama/alamat pelaku usaha: jangan pernah di-commit
+*.xlsx
+*.xls
+*.csv
+*.pdf
+*.docx
+*.pptx
+*.json.bak
+
+# Sistem operasi dan editor
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
