@@ -57,7 +57,21 @@ p { margin: 0 0 1em; }
 
 /* ---------- hero ---------- */
 .hero { background: radial-gradient(1200px 500px at 85% -10%, rgba(15,118,110,.55), transparent 60%), linear-gradient(135deg, var(--navy) 0%, #1b3f6f 60%, #17566a 100%); color: #fff; padding: 64px 0 110px; position: relative; overflow: hidden; }
-.hero h1 { color: #fff; }
+.hero h1 { color: #fff; text-shadow: 0 2px 18px rgba(4,10,28,.45); }
+.hero > .wadah { position: relative; z-index: 2; }
+/* carousel latar: 3 ilustrasi SVG berganti dengan memudar */
+.hero-bg { position: absolute; inset: 0; z-index: 0; background: #0a1630; }
+.hero-bg .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
+.hero-bg .slide.aktif { opacity: 1; }
+.hero-bg .slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,18,44,.74) 0%, rgba(8,18,44,.4) 50%, rgba(8,18,44,.04) 100%), linear-gradient(0deg, rgba(8,18,44,.4), transparent 30%); pointer-events: none; }
+.hero-kontrol { position: absolute; left: 0; right: 0; bottom: 78px; z-index: 3; }
+.hero-kontrol .wadah { display: flex; align-items: center; gap: 14px; }
+.hero-kontrol .titik { display: flex; gap: 8px; }
+.hero-kontrol .titik button { width: 12px; height: 12px; padding: 0; border-radius: 999px; border: 0; background: rgba(255,255,255,.4); cursor: pointer; transition: width .25s, background .25s; }
+.hero-kontrol .titik button[aria-current="true"] { width: 34px; background: #f5b942; }
+.hero-kontrol .titik button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.hero-kontrol .keterangan { font-size: .82rem; color: #d6e2f3; letter-spacing: .04em; min-height: 1.2em; }
 .hero .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; }
 .hero .lead { font-size: 1.12rem; color: #d6e2f3; max-width: 36em; }
 .hero .aksi { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }

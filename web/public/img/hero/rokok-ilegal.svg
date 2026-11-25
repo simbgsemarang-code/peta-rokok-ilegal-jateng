@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMid slice">
+<style>
+  .pindai { animation: turun 3.6s ease-in-out infinite alternate; }
+  .kedip { animation: kedip 1.8s ease-in-out infinite; }
+  .asap { animation: asap 6s ease-in-out infinite; }
+  @keyframes turun { from { transform: translateY(0); } to { transform: translateY(300px); } }
+  @keyframes kedip { 0%,100% { opacity: .45; } 50% { opacity: 1; } }
+  @keyframes asap { 0%,100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(-14px); opacity: .6; } }
+  @media (prefers-reduced-motion: reduce) { .pindai, .kedip, .asap { animation: none; } }
+</style>
+<defs>
+  <linearGradient id="latar" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#070c1f"/><stop offset=".55" stop-color="#14264f"/><stop offset="1" stop-color="#1a4a5e"/></linearGradient>
+  <radialGradient id="merah" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff4d5e" stop-opacity=".42"/><stop offset="1" stop-color="#ff4d5e" stop-opacity="0"/></radialGradient>
+  <linearGradient id="bungkus" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#27407f"/><stop offset="1" stop-color="#0e1e4a"/></linearGradient>
+  <linearGradient id="pindaiG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b78" stop-opacity="0"/><stop offset=".5" stop-color="#ff6b78" stop-opacity=".9"/><stop offset="1" stop-color="#ff6b78" stop-opacity="0"/></linearGradient>
+  <linearGradient id="peti" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16295a"/><stop offset="1" stop-color="#0a1736"/></linearGradient>
+  <pattern id="pita" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="12" fill="#f5b942"/><rect x="6" width="6" height="12" fill="#c4902d"/></pattern>
+  <filter id="pendar" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="10"/></filter>
+  <g id="rokok">
+    <rect x="0" y="-11" width="380" height="22" rx="4" fill="#e8eef8"/>
+    <rect x="0" y="-11" width="100" height="22" rx="4" fill="#f0a23c"/>
+    <rect x="98" y="-11" width="3" height="22" fill="#b9741c"/>
+    <rect x="364" y="-11" width="16" height="22" rx="4" fill="#ff7a3c"/>
+    <rect x="378" y="-9" width="6" height="18" rx="3" fill="#ff4d5e"/>
+  </g>
+  <g id="peringatan"><path d="M0 -34 L34 26 H-34Z" fill="#ff4d5e" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><rect x="-3.5" y="-14" width="7" height="24" rx="3" fill="#fff"/><circle cx="0" cy="16" r="4" fill="#fff"/></g>
+</defs>
+
+<rect width="1600" height="700" fill="url(#latar)"/>
+<circle cx="800" cy="340" r="420" fill="url(#merah)"/>
+
+<!-- peti kemasan kiri & kanan -->
+<g>
+  <g fill="url(#peti)" stroke="#7fe3ff" stroke-opacity=".6" stroke-width="2">
+    <rect x="70" y="450" width="190" height="150"/><rect x="270" y="500" width="150" height="100"/><rect x="110" y="330" width="140" height="120"/>
+    <rect x="1190" y="440" width="200" height="160"/><rect x="1400" y="490" width="160" height="110"/><rect x="1240" y="320" width="150" height="120"/>
+  </g>
+  <g stroke="#7fe3ff" stroke-opacity=".4" stroke-width="3"><path d="M165 450 V600 M345 500 V600 M180 330 V450 M1290 440 V600 M1480 490 V600 M1315 320 V440"/></g>
+  <g fill="#ff4d5e" opacity=".85"><rect x="95" y="480" width="40" height="8"/><rect x="95" y="496" width="64" height="6"/><rect x="1215" y="470" width="48" height="8"/><rect x="1215" y="486" width="70" height="6"/><rect x="130" y="360" width="34" height="8"/><rect x="1262" y="350" width="40" height="8"/></g>
+</g>
+
+<!-- rokok berserakan -->
+<g transform="translate(250 612) rotate(-9)"><use href="#rokok"/></g>
+<g transform="translate(990 626) rotate(6)"><use href="#rokok"/></g>
+<g transform="translate(1060 592) rotate(-4)" opacity=".85"><use href="#rokok"/></g>
+
+<!-- asap -->
+<g class="asap" fill="none" stroke="#cfeeff" stroke-width="3" stroke-linecap="round" opacity=".4">
+  <path d="M640 250 C610 220 670 190 640 160 C620 135 660 110 640 80"/><path d="M960 270 C930 235 990 205 960 170"/>
+</g>
+
+<!-- bungkus rokok -->
+<g>
+  <rect x="690" y="195" width="220" height="330" rx="14" fill="#ff4d5e" opacity=".25" filter="url(#pendar)"/>
+  <rect x="690" y="195" width="220" height="330" rx="14" fill="url(#bungkus)" stroke="#9fb4e8" stroke-width="3"/>
+  <rect x="690" y="195" width="220" height="82" rx="14" fill="#1c3270"/>
+  <rect x="706" y="300" width="188" height="150" rx="8" fill="none" stroke="#9fb4e8" stroke-opacity=".5" stroke-width="2"/>
+  <circle cx="800" cy="375" r="36" fill="none" stroke="#9fb4e8" stroke-opacity=".6" stroke-width="3"/>
+  <!-- tanpa pita cukai: celah kosong bergaris putus-putus -->
+  <rect x="690" y="277" width="220" height="14" fill="none" stroke="#ff4d5e" stroke-width="2.5" stroke-dasharray="8 6" class="kedip"/>
+  <!-- pita cukai palsu tersobek di samping -->
+  <g transform="translate(1000 330) rotate(14)"><rect width="150" height="26" fill="url(#pita)" stroke="#f5b942" stroke-width="1.5"/><path d="M150 0 l-10 6 l8 6 l-9 6 l10 8 H150Z" fill="#14264f" opacity=".7"/></g>
+</g>
+
+<!-- bingkai pemindai -->
+<g stroke="#ff6b78" stroke-width="5" fill="none" stroke-linecap="round" class="kedip">
+  <path d="M655 235 V175 H715 M945 175 H1005 V235 M655 495 V555 H715 M945 555 H1005 V495"/>
+</g>
+<g clip-path="inset(0)"><g class="pindai"><rect x="640" y="190" width="380" height="16" fill="url(#pindaiG)"/></g></g>
+
+<!-- tanda larangan -->
+<g transform="translate(1000 470)">
+  <circle r="58" fill="#0a1736" fill-opacity=".7" stroke="#ff4d5e" stroke-width="9"/><path d="M-41 -41 L41 41" stroke="#ff4d5e" stroke-width="9" stroke-linecap="round"/>
+</g>
+<use href="#peringatan" x="580" y="330" class="kedip"/>
+
+<!-- kaca pembesar -->
+<g transform="translate(560 520)" stroke="#f5b942" fill="none" stroke-linecap="round">
+  <circle r="64" stroke-width="9" fill="#7fe3ff" fill-opacity=".1"/><path d="M-45 -45 A64 64 0 0 1 20 -60" stroke-width="5" stroke="#fff" stroke-opacity=".6"/>
+  <path d="M46 46 L110 110" stroke-width="16"/>
+</g>
+
+<!-- HUD -->
+<g fill="#ff6b78" opacity=".85"><rect x="1030" y="170" width="120" height="7"/><rect x="1030" y="188" width="86" height="7"/><rect x="1030" y="206" width="102" height="7"/><rect x="450" y="170" width="120" height="7"/><rect x="484" y="188" width="86" height="7"/><rect x="468" y="206" width="102" height="7"/></g>
+<g stroke="#5fe0ff" stroke-opacity=".25" stroke-width="1.5" fill="none"><path d="M0 625 H1600 M0 650 H1600 M0 680 H1600"/></g>
+<g stroke="#7fe3ff" stroke-opacity=".7" stroke-width="3" fill="none"><path d="M40 80 V40 H80 M1560 80 V40 H1520 M40 620 V660 H80 M1560 620 V660 H1520"/></g>
+</svg>

@@ -2,7 +2,20 @@
 @section('judul', 'Beranda')
 @section('isi')
 @use('App\Support\Format')
-<section class="hero">
+<section class="hero" id="hero" aria-roledescription="carousel" aria-label="Ilustrasi latar">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="slide aktif" data-ket="Satpol PP · penegakan peraturan"><img src="{{ asset('img/hero/satpolpp.svg') }}" alt=""></div>
+    <div class="slide" data-ket="Provinsi Jawa Tengah · 35 kabupaten/kota"><img src="{{ asset('img/hero/jawa-tengah.svg') }}" alt="" loading="lazy"></div>
+    <div class="slide" data-ket="Rokok ilegal · pita cukai bermasalah"><img src="{{ asset('img/hero/rokok-ilegal.svg') }}" alt="" loading="lazy"></div>
+  </div>
+  <div class="hero-kontrol"><div class="wadah">
+    <div class="titik" role="group" aria-label="Pilih ilustrasi">
+      <button type="button" aria-label="Ilustrasi 1: Satpol PP" aria-current="true"></button>
+      <button type="button" aria-label="Ilustrasi 2: Jawa Tengah"></button>
+      <button type="button" aria-label="Ilustrasi 3: Rokok ilegal"></button>
+    </div>
+    <span class="keterangan" aria-live="off"></span>
+  </div></div>
   <div class="wadah grid">
     <div>
       <span class="lencana">{{ config('publik.nama') }} · Jawa Tengah · 35 kabupaten/kota · DBHCHT TA 2026</span>
@@ -103,6 +116,32 @@
   </div>
 </section>
 @endsection
+
+@push('skrip')
+<script>
+// carousel latar hero: ganti tiap 6,5 detik; berhenti saat kursor/fokus di hero atau bila pengguna memilih gerak minim
+(function () {
+  const hero = document.getElementById('hero'); if (!hero) return;
+  const slide = [...hero.querySelectorAll('.hero-bg .slide')], titik = [...hero.querySelectorAll('.titik button')], ket = hero.querySelector('.keterangan');
+  let i = 0, t = null;
+  const kurangGerak = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tampil(n) {
+    i = (n + slide.length) % slide.length;
+    slide.forEach((s, k) => s.classList.toggle('aktif', k === i));
+    titik.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
+    ket.textContent = slide[i].dataset.ket;
+    slide[i].querySelector('img').loading = 'eager';
+  }
+  function jalan() { if (kurangGerak || t) return; t = setInterval(() => tampil(i + 1), 6500); }
+  function henti() { clearInterval(t); t = null; }
+  titik.forEach((b, k) => b.addEventListener('click', () => { tampil(k); henti(); jalan(); }));
+  hero.addEventListener('mouseenter', henti); hero.addEventListener('mouseleave', jalan);
+  hero.addEventListener('focusin', henti); hero.addEventListener('focusout', jalan);
+  document.addEventListener('visibilitychange', () => document.hidden ? henti() : jalan());
+  tampil(0); jalan();
+})();
+</script>
+@endpush
 
 @if(config('publik.tampilkan_data'))
 @push('skrip')

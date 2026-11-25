@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMid slice">
+<style>
+  .sapu { transform-origin: 800px 330px; animation: putar 9s linear infinite; }
+  .drn1 { animation: melayang 5s ease-in-out infinite; }
+  .drn2 { animation: melayang 6.5s ease-in-out infinite reverse; }
+  .denyut { animation: denyut 3.2s ease-in-out infinite; }
+  @keyframes putar { to { transform: rotate(360deg); } }
+  @keyframes melayang { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  @keyframes denyut { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .sapu, .drn1, .drn2, .denyut { animation: none; } }
+</style>
+<defs>
+  <linearGradient id="langit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#040a1c"/><stop offset=".62" stop-color="#0d2250"/><stop offset="1" stop-color="#16566b"/></linearGradient>
+  <radialGradient id="cahaya" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#3fd0ff" stop-opacity=".5"/><stop offset="1" stop-color="#3fd0ff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="sapuG" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(800 330) scale(400)"><stop offset="0" stop-color="#5fe0ff" stop-opacity=".0"/><stop offset="1" stop-color="#5fe0ff" stop-opacity=".42"/></radialGradient>
+  <linearGradient id="perisai" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b3f8f"/><stop offset="1" stop-color="#0a1c46"/></linearGradient>
+  <linearGradient id="sorot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fe9ff" stop-opacity=".55"/><stop offset="1" stop-color="#8fe9ff" stop-opacity="0"/></linearGradient>
+  <pattern id="jendela" width="14" height="18" patternUnits="userSpaceOnUse"><rect x="3" y="4" width="6" height="8" fill="#7fe3ff" opacity=".5"/></pattern>
+  <filter id="pendar" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+  <g id="drone">
+    <polygon points="0,10 -70,230 70,230" fill="url(#sorot)"/>
+    <ellipse cx="0" cy="0" rx="20" ry="9" fill="#0b1a3d" stroke="#7fe3ff" stroke-width="2"/>
+    <path d="M-18 -3 L-52 -14 M18 -3 L52 -14" stroke="#7fe3ff" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="-54" cy="-16" rx="22" ry="4" fill="#7fe3ff" opacity=".7"/><ellipse cx="54" cy="-16" rx="22" ry="4" fill="#7fe3ff" opacity=".7"/>
+    <circle cx="0" cy="3" r="4" fill="#ff4d5e"/>
+  </g>
+</defs>
+
+<rect width="1600" height="700" fill="url(#langit)"/>
+<circle cx="800" cy="330" r="420" fill="url(#cahaya)"/>
+
+<!-- bintang -->
+<g fill="#cfeeff" opacity=".7">
+  <circle cx="90" cy="70" r="1.6"/><circle cx="240" cy="140" r="1.2"/><circle cx="420" cy="50" r="1.8"/><circle cx="610" cy="110" r="1.2"/><circle cx="1010" cy="60" r="1.6"/>
+  <circle cx="1190" cy="120" r="1.2"/><circle cx="1390" cy="48" r="1.8"/><circle cx="1520" cy="150" r="1.3"/><circle cx="1330" cy="230" r="1.1"/><circle cx="170" cy="280" r="1.3"/>
+</g>
+
+<!-- cakrawala kota -->
+<g fill="#081634">
+  <rect x="20" y="470" width="90" height="230"/><rect x="120" y="420" width="70" height="280"/><rect x="200" y="500" width="110" height="200"/><rect x="320" y="440" width="80" height="260"/>
+  <rect x="410" y="520" width="120" height="180"/><rect x="1080" y="510" width="110" height="190"/><rect x="1200" y="430" width="80" height="270"/><rect x="1290" y="480" width="100" height="220"/>
+  <rect x="1400" y="410" width="75" height="290"/><rect x="1485" y="470" width="95" height="230"/>
+</g>
+<g fill="url(#jendela)">
+  <rect x="20" y="470" width="90" height="230"/><rect x="120" y="420" width="70" height="280"/><rect x="200" y="500" width="110" height="200"/><rect x="320" y="440" width="80" height="260"/>
+  <rect x="410" y="520" width="120" height="180"/><rect x="1080" y="510" width="110" height="190"/><rect x="1200" y="430" width="80" height="270"/><rect x="1290" y="480" width="100" height="220"/>
+  <rect x="1400" y="410" width="75" height="290"/><rect x="1485" y="470" width="95" height="230"/>
+</g>
+
+<!-- lantai grid -->
+<g stroke="#5fe0ff" stroke-opacity=".28" stroke-width="1.5" fill="none">
+  <path d="M0 620 H1600 M0 645 H1600 M0 675 H1600"/>
+  <path d="M800 585 L-300 700 M800 585 L-80 700 M800 585 L190 700 M800 585 L500 700 M800 585 L800 700 M800 585 L1100 700 M800 585 L1410 700 M800 585 L1680 700 M800 585 L1900 700"/>
+</g>
+
+<!-- cincin radar + sapuan -->
+<g fill="none" stroke="#5fe0ff" stroke-opacity=".3" stroke-width="1.6">
+  <circle cx="800" cy="330" r="210" stroke-dasharray="6 10"/><circle cx="800" cy="330" r="290"/><circle cx="800" cy="330" r="370" stroke-dasharray="2 12"/>
+</g>
+<g class="sapu"><path d="M800 330 L1200 330 A400 400 0 0 0 1146 130 Z" fill="url(#sapuG)"/></g>
+
+<!-- perisai -->
+<g>
+  <path d="M800 120 L965 178 V345 C965 455 893 525 800 565 C707 525 635 455 635 345 V178 Z" fill="#5fe0ff" opacity=".35" filter="url(#pendar)"/>
+  <path d="M800 120 L965 178 V345 C965 455 893 525 800 565 C707 525 635 455 635 345 V178 Z" fill="url(#perisai)" stroke="#7fe3ff" stroke-width="4"/>
+  <path d="M800 160 L930 205 V342 C930 432 874 490 800 524 C726 490 670 432 670 342 V205 Z" fill="none" stroke="#f5b942" stroke-width="3"/>
+  <polygon points="800,280 816.5,327.3 866.6,328.4 826.6,358.7 841.1,406.6 800,378 758.9,406.6 773.4,358.7 733.4,328.4 783.5,327.3" fill="#f5b942"/>
+  <g class="denyut" fill="none" stroke="#7fe3ff" stroke-width="2"><path d="M700 230 H740 M860 230 H900 M700 456 H740 M860 456 H900"/></g>
+</g>
+
+<!-- pesawat nirawak -->
+<use href="#drone" class="drn1" x="340" y="190" transform="translate(0 0)"/>
+<g transform="translate(1290 150) scale(.8)"><use href="#drone" class="drn2"/></g>
+
+<!-- jaringan data -->
+<g stroke="#7fe3ff" stroke-opacity=".5" stroke-width="1.4" fill="none">
+  <path d="M635 345 L470 400 L330 470 M965 345 L1130 400 L1270 440"/>
+</g>
+<g fill="#f5b942"><circle cx="470" cy="400" r="5"/><circle cx="330" cy="470" r="5"/><circle cx="1130" cy="400" r="5"/><circle cx="1270" cy="440" r="5"/></g>
+
+<!-- siku HUD -->
+<g stroke="#7fe3ff" stroke-opacity=".7" stroke-width="3" fill="none">
+  <path d="M40 80 V40 H80 M1560 80 V40 H1520 M40 620 V660 H80 M1560 620 V660 H1520"/>
+</g>
+</svg>
