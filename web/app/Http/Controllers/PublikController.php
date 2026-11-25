@@ -41,6 +41,58 @@ class PublikController extends Controller
         return view('publik.kontak');
     }
 
+    /** Peta layar penuh: kab/kota berwarna menurut angka penindakan dan sebaran per kecamatan. */
+    public function peta()
+    {
+        abort_unless(config('publik.tampilkan_data'), 404);
+        $r = $this->ringkas();
+
+        return view('publik.peta', ['ringkas' => $r, 'tahun' => array_column($r['per_tahun'], 'tahun')]);
+    }
+
+    /**
+     * Sebaran per kecamatan untuk publik: satu gelembung per kecamatan di titik tengah wilayahnya (bukan lokasi
+     * usaha). Perlindungan angka kecil: kecamatan dengan kurang dari 3 pelaku hanya diberi label "1–2" dan jumlah
+     * batangnya disembunyikan, supaya satu usaha tidak dapat dikenali dari angkanya. Tanpa nama, alamat, atau titik
+     * perkiraan per alamat; titik terperinci hanya ada di aplikasi petugas.
+     */
+    public function sebaran(Request $request)
+    {
+        abort_unless(config('publik.tampilkan_data'), 404);
+        $tahun = $request->integer('tahun') ?: null;
+
+        return response()->json(Cache::remember('publik.sebaran.'.($tahun ?: 'semua'), 300, function () use ($tahun) {
+            try {
+                $rows = DB::select('
+                    SELECT c.kode, c.nama AS kecamatan, k.nama AS kab,
+                           ST_Y(ST_PointOnSurface(c.geom)) AS lat, ST_X(ST_PointOnSurface(c.geom)) AS lon,
+                           count(*) AS pelanggar, COALESCE(sum(v.jumlah_batang), 0) AS batang
+                    FROM penindakan.v_pelanggar v
+                    JOIN ref.kecamatan c ON c.kode = v.kode_kec
+                    JOIN ref.kabkota k ON k.kode = c.kode_kab
+                    WHERE c.geom IS NOT NULL'.($tahun ? ' AND v.tahun = ?' : '').'
+                    GROUP BY c.kode, c.nama, k.nama, c.geom
+                    ORDER BY pelanggar DESC', $tahun ? [$tahun] : []);
+            } catch (QueryException $e) {
+                report($e);
+
+                return [];
+            }
+
+            return array_map(function ($r) {
+                $kecil = (int) $r->pelanggar < 3;
+
+                return [
+                    'kecamatan' => $r->kecamatan, 'kab' => $r->kab,
+                    'lat' => round((float) $r->lat, 5), 'lon' => round((float) $r->lon, 5),
+                    'pelanggar' => $kecil ? null : (int) $r->pelanggar,
+                    'label' => $kecil ? '1–2' : (string) (int) $r->pelanggar,
+                    'batang' => $kecil ? null : (int) $r->batang,
+                ];
+            }, $rows);
+        }));
+    }
+
     /** GeoJSON kab/kota (disederhanakan) dengan angka teragregat; opsional per tahun. */
     public function kabkota(Request $request)
     {

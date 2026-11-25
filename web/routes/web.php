@@ -15,9 +15,11 @@ Route::get('/', [PublikController::class, 'beranda'])->name('beranda');
 Route::get('/tentang', [PublikController::class, 'tentang'])->name('tentang');
 Route::get('/kenali-rokok-ilegal', [PublikController::class, 'kenali'])->name('kenali');
 Route::get('/data', [PublikController::class, 'data'])->name('data');
+Route::get('/peta-publik', [PublikController::class, 'peta'])->name('peta.publik');
 Route::get('/kontak', [PublikController::class, 'kontak'])->name('kontak');
 Route::middleware('throttle:60,1')->group(function () {
     Route::get('/data-publik/kabkota', [PublikController::class, 'kabkota'])->name('publik.kabkota');
+    Route::get('/data-publik/sebaran', [PublikController::class, 'sebaran'])->name('publik.sebaran');
     Route::get('/data-publik/penindakan.csv', [PublikController::class, 'csv'])->name('publik.csv');
 });
 

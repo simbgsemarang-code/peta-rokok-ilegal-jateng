@@ -26,6 +26,7 @@
       <a href="{{ route('beranda') }}" class="{{ request()->routeIs('beranda') ? 'aktif' : '' }}">Beranda</a>
       <a href="{{ route('tentang') }}" class="{{ request()->routeIs('tentang') ? 'aktif' : '' }}">Tentang</a>
       <a href="{{ route('kenali') }}" class="{{ request()->routeIs('kenali') ? 'aktif' : '' }}">Kenali Rokok Ilegal</a>
+      @if(config('publik.tampilkan_data'))<a href="{{ route('peta.publik') }}" class="{{ request()->routeIs('peta.publik') ? 'aktif' : '' }}">Peta</a>@endif
       @if(config('publik.tampilkan_data'))<a href="{{ route('data') }}" class="{{ request()->routeIs('data') ? 'aktif' : '' }}">Data Penindakan</a>@endif
       <a href="{{ route('kontak') }}" class="{{ request()->routeIs('kontak') ? 'aktif' : '' }}">Kontak &amp; Pengaduan</a>
       @auth
@@ -39,6 +40,7 @@
 
 <main id="isi">@yield('isi')</main>
 
+@unless(View::hasSection('tanpa-footer'))
 <footer class="kaki">
   <div class="wadah">
     <div class="grid">
@@ -67,6 +69,7 @@
     <div class="bawah">© {{ date('Y') }} {{ config('publik.instansi') }}. Dikembangkan untuk kegiatan pemetaan peredaran rokok ilegal TA 2026.</div>
   </div>
 </footer>
+@endunless
 @stack('skrip')
 </body>
 </html>
