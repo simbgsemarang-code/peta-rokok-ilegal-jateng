@@ -23,7 +23,12 @@ acak()  { openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c "${1:-28}"; }
 [[ -f "$APP_DIR/db/01_skema.sql" ]] || galat "berkas $APP_DIR/db/01_skema.sql tidak ditemukan."
 
 info "1/8 Memasang paket (nginx, PHP, PostgreSQL + PostGIS, certbot)"
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a
+if [[ "$(swapon --show --noheadings | wc -l)" -eq 0 ]]; then
+  echo "Membuat swap 2 GB..."
+  fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile >/dev/null && swapon /swapfile
+  grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
 apt-get update -y
 apt-get install -y nginx php-fpm php-cli php-pgsql php-mbstring php-xml php-curl php-zip php-gd php-intl \
   unzip curl git openssl ufw postgresql postgresql-16-postgis-3 certbot python3-certbot-nginx
@@ -52,7 +57,7 @@ systemctl restart "php$PHPV-fpm"
 
 info "4/8 Basis data PostgreSQL + PostGIS"
 systemctl enable --now postgresql
-[[ -f "$RAHASIA" ]] || { umask 077; : > "$RAHASIA"; }
+[[ -f "$RAHASIA" ]] || ( umask 077; : > "$RAHASIA" )   # subshell: umask ketat tidak boleh menular ke langkah berikutnya
 if ! grep -q '^DB_PASSWORD=' "$RAHASIA"; then echo "DB_PASSWORD=$(acak 28)" >> "$RAHASIA"; fi
 DB_PASSWORD="$(grep '^DB_PASSWORD=' "$RAHASIA" | cut -d= -f2-)"
 if ! sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'" | grep -q 1; then
