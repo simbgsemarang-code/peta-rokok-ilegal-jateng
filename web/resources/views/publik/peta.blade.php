@@ -15,6 +15,12 @@
   .panel-peta .isi-panel { padding: 0 16px 14px; }
   .panel-peta label.f { display: block; font-size: .78rem; font-weight: 700; color: var(--navy); margin: 8px 0 3px; }
   .panel-peta select { width: 100%; padding: 8px 10px; border-radius: 9px; border: 1px solid #c9d0dc; font: inherit; background: #fff; }
+  .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seg button { flex: 1 1 auto; min-width: 54px; padding: 8px 10px; border-radius: 9px; border: 1px solid #c9d0dc; background: #fff; color: var(--navy); font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+  .seg button:hover { border-color: var(--navy); }
+  .seg button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .seg button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .seg.dua button { flex: 1 1 0; }
   .panel-peta .cek { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; font-size: .88rem; }
   .panel-peta .mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0 4px; }
   .panel-peta .mini div { background: var(--bg); border-radius: 10px; padding: 8px 10px; }
@@ -32,15 +38,23 @@
     <summary>Peta penindakan</summary>
     <div class="isi-panel">
       <div class="mini">
-        <div><b>{{ $ringkas['pelanggar'] ? Format::angka($ringkas['pelanggar']) : '–' }}</b><span>pelaku ditemukan melanggar</span></div>
-        <div><b>{{ $ringkas['batang'] ? Format::angka($ringkas['batang']) : '–' }}</b><span>batang disita</span></div>
+        <div><b id="statPel">{{ $ringkas['pelanggar'] ? Format::angka($ringkas['pelanggar']) : '–' }}</b><span>pelaku ditemukan melanggar</span></div>
+        <div><b id="statBtg">{{ $ringkas['batang'] ? Format::angka($ringkas['batang']) : '–' }}</b><span>batang disita</span></div>
       </div>
-      <label class="f" for="tahun">Tahun</label>
-      <select id="tahun"><option value="">Semua tahun</option>@foreach($tahun as $t)<option value="{{ $t }}">{{ $t }}</option>@endforeach</select>
-      <label class="f" for="ukur">Warna wilayah menurut</label>
+      @php $daftarTahun = collect($tahun)->map(fn ($t) => (int) $t)->unique()->sort()->values(); @endphp
+      <span class="f" id="lblTahun" style="display:block;font-size:.78rem;font-weight:700;color:var(--navy);margin:8px 0 5px">Tahun</span>
+      <div class="seg" id="tahun" role="group" aria-labelledby="lblTahun">
+        <button type="button" data-tahun="" aria-pressed="true">Semua</button>
+        @foreach($daftarTahun as $t)<button type="button" data-tahun="{{ $t }}" aria-pressed="false">{{ $t }}</button>@endforeach
+      </div>
+      <span class="f" id="lblDasar" style="display:block;font-size:.78rem;font-weight:700;color:var(--navy);margin:12px 0 5px">Peta dasar</span>
+      <div class="seg dua" id="dasar" role="group" aria-labelledby="lblDasar">
+        <button type="button" data-dasar="osm" aria-pressed="true">OSM</button>
+        <button type="button" data-dasar="satelit" aria-pressed="false">Satelit</button>
+      </div>
+      <label class="f" for="ukur" style="margin-top:12px">Warna wilayah menurut</label>
       <select id="ukur"><option value="batang">Jumlah batang disita</option><option value="pelanggar">Jumlah pelaku</option><option value="operasi">Jumlah operasi</option></select>
       <label class="cek"><input type="checkbox" id="sebaran" checked> <span>Gelembung sebaran per kecamatan</span></label>
-      <label class="cek"><input type="checkbox" id="dasar" checked> <span>Peta dasar (butuh internet)</span></label>
       <p class="catatan-p">
         Gelembung berada di <b>titik tengah kecamatan</b>, bukan lokasi usaha. Kecamatan dengan kurang dari 3 pelaku diberi label "1–2" dan jumlah batangnya tidak ditampilkan. Nama, alamat, dan titik lokasi usaha tidak ditampilkan kepada publik.
         @auth <br>Anda login sebagai petugas: <a href="{{ route('peta') }}"><b>buka peta petugas</b></a> untuk batas desa/kelurahan dan titik perkiraan lokasi.
@@ -70,7 +84,27 @@
   window.addEventListener('resize', ukurTinggi);
   if (innerWidth <= 700) $('panelPeta').removeAttribute('open');   // di ponsel panel dilipat agar peta terlihat
 
-  const dasar = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 14, attribution: '&copy; OpenStreetMap' }).addTo(peta);
+  // peta dasar: OSM atau citra satelit (Esri World Imagery + label tempat)
+  const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 16, attribution: '&copy; OpenStreetMap' }).addTo(peta);
+  const satelit = L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16, attribution: 'Citra &copy; Esri, Maxar, Earthstar Geographics' }),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 })
+  ]);
+  const DASAR = { osm, satelit };
+  let dasarAktif = 'osm';
+  function pilihDasar(k) {
+    if (k === dasarAktif) return;
+    DASAR[dasarAktif].remove(); DASAR[k].addTo(peta); dasarAktif = k;
+    document.querySelectorAll('#dasar button').forEach(b => b.setAttribute('aria-pressed', b.dataset.dasar === k ? 'true' : 'false'));
+    if (lapisan) lapisan.bringToFront(); lapSebaran.eachLayer(l => l.bringToFront && l.bringToFront());
+  }
+  const PER = @json($ringkas['per_tahun']);
+  let tahunDipilih = '';
+  function isiStat() {
+    const baris = tahunDipilih ? PER.filter(p => String(p.tahun) === tahunDipilih) : PER;
+    const p = baris.reduce((a, r) => a + r.pelanggar, 0), b = baris.reduce((a, r) => a + r.batang, 0);
+    $('statPel').textContent = p ? nf.format(p) : '–'; $('statBtg').textContent = b ? nf.format(b) : '–';
+  }
   const DARATAN = L.latLngBounds([-8.35, 108.5], [-6.4, 111.75]);
   let lapisan = null, lapSebaran = L.layerGroup().addTo(peta), data = null, sebaran = [], batas = [], sudahPas = false;
   const leg = L.control({ position: 'bottomleft' }); leg.onAdd = () => { const d = L.DomUtil.create('div', 'legenda-p'); d.id = 'legP'; return d; }; leg.addTo(peta);
@@ -115,7 +149,7 @@
   }
 
   async function muat() {
-    const t = $('tahun').value, q = t ? '?tahun=' + encodeURIComponent(t) : '';
+    const t = tahunDipilih, q = t ? '?tahun=' + encodeURIComponent(t) : '';
     try {
       const [a, b] = await Promise.all([
         fetch('{{ route('publik.kabkota') }}' + q, { headers: { Accept: 'application/json' } }).then(r => r.json()),
@@ -126,10 +160,14 @@
       gambar(); gambarSebaran();
     } catch (e) { $('infoPeta').textContent = 'Data peta belum tersedia.'; }
   }
-  $('tahun').addEventListener('change', muat);
+  document.querySelectorAll('#tahun button').forEach(b => b.addEventListener('click', () => {
+    tahunDipilih = b.dataset.tahun;
+    document.querySelectorAll('#tahun button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    isiStat(); muat();
+  }));
+  document.querySelectorAll('#dasar button').forEach(b => b.addEventListener('click', () => pilihDasar(b.dataset.dasar)));
   $('ukur').addEventListener('change', () => data && gambar());
   $('sebaran').addEventListener('change', gambarSebaran);
-  $('dasar').addEventListener('change', e => e.target.checked ? dasar.addTo(peta) : dasar.remove());
   muat();
 })();
 </script>
