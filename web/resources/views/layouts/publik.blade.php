@@ -14,25 +14,31 @@
 </head>
 <body>
 <a class="lompat" href="#isi">Lompat ke isi</a>
+@php
+  $namaApp = (string) config('publik.nama');
+  $namaAwal = mb_substr($namaApp, 0, 2);
+  $namaAksen = mb_substr($namaApp, 2);
+@endphp
 <header class="nav">
   <div class="nav-in">
-    <a class="merek" href="{{ route('beranda') }}" aria-label="Beranda">
+    <a class="merek" href="{{ route('beranda') }}" aria-label="{{ $namaApp }}, beranda">
       <span class="logo"><img src="{{ asset('img/logo-jateng.png') }}" alt="Logo Provinsi Jawa Tengah"><img src="{{ asset('img/logo-satpolpp.png') }}" alt="Logo Satpol PP"></span>
-      <span class="nama"><b>{{ config('publik.nama') }}</b><small>{{ config('publik.nama_panjang') }}</small></span>
+      <span class="sekat" aria-hidden="true"></span>
+      <span class="nama"><b>{{ $namaAwal }}<span class="aksen">{{ $namaAksen }}</span></b><small>{{ config('publik.nama_panjang') }}</small></span>
     </a>
     <input type="checkbox" id="menu" class="menu-cek" aria-hidden="true">
     <label for="menu" class="hamb" aria-label="Buka menu">☰</label>
     <nav class="menu" aria-label="Menu utama">
-      <a href="{{ route('beranda') }}" class="{{ request()->routeIs('beranda') ? 'aktif' : '' }}">Beranda</a>
-      <a href="{{ route('tentang') }}" class="{{ request()->routeIs('tentang') ? 'aktif' : '' }}">Tentang</a>
-      <a href="{{ route('kenali') }}" class="{{ request()->routeIs('kenali') ? 'aktif' : '' }}">Kenali Rokok Ilegal</a>
-      @if(config('publik.tampilkan_data'))<a href="{{ route('peta.publik') }}" class="{{ request()->routeIs('peta.publik') ? 'aktif' : '' }}">Peta</a>@endif
-      @if(config('publik.tampilkan_data'))<a href="{{ route('data') }}" class="{{ request()->routeIs('data') ? 'aktif' : '' }}">Data Penindakan</a>@endif
-      <a href="{{ route('kontak') }}" class="{{ request()->routeIs('kontak') ? 'aktif' : '' }}">Kontak &amp; Pengaduan</a>
+      <a href="{{ route('beranda') }}" class="tautan {{ request()->routeIs('beranda') ? 'aktif' : '' }}">Beranda</a>
+      <a href="{{ route('tentang') }}" class="tautan {{ request()->routeIs('tentang') ? 'aktif' : '' }}">Tentang</a>
+      <a href="{{ route('kenali') }}" class="tautan {{ request()->routeIs('kenali') ? 'aktif' : '' }}">Kenali Rokok Ilegal</a>
+      @if(config('publik.tampilkan_data'))<a href="{{ route('peta.publik') }}" class="tautan {{ request()->routeIs('peta.publik') ? 'aktif' : '' }}">Peta</a>@endif
+      @if(config('publik.tampilkan_data'))<a href="{{ route('data') }}" class="tautan {{ request()->routeIs('data') ? 'aktif' : '' }}">Data Penindakan</a>@endif
+      <a href="{{ route('kontak') }}" class="tautan {{ request()->routeIs('kontak') ? 'aktif' : '' }}">Kontak &amp; Pengaduan</a>
       @auth
-        <a href="{{ route('peta') }}" class="masuk">Buka Aplikasi</a>
+        <a href="{{ route('peta') }}" class="masuk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Buka Aplikasi</a>
       @else
-        <a href="{{ route('login') }}" class="masuk">Masuk Petugas</a>
+        <a href="{{ route('login') }}" class="masuk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Masuk Petugas</a>
       @endauth
     </nav>
   </div>

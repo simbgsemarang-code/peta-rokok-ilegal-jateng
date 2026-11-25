@@ -21,22 +21,29 @@ p { margin: 0 0 1em; }
 .lompat:focus { left: 8px; top: 8px; }
 
 /* ---------- navbar ---------- */
-.nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.96); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.nav-in { max-width: var(--maks); margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; }
+:root { --biru: #1d3fae; --biru-2: #16307f; --font-nav: "Poppins", "Segoe UI", system-ui, -apple-system, Arial, sans-serif; }
+.nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); font-family: var(--font-nav); }
+.nav-in { max-width: 1400px; margin: 0 auto; padding: 12px 28px; display: flex; align-items: center; gap: 22px; }
 .merek { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--navy); min-width: 0; }
 .merek .logo { display: flex; gap: 6px; align-items: center; flex: 0 0 auto; }
 .merek .logo img { height: 42px; width: auto; flex: 0 0 auto; }
-.merek .nama { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
-.merek .nama b { font-size: 1.12rem; letter-spacing: .04em; }
-.merek .nama small { color: var(--muted); font-size: .74rem; line-height: 1.25; }
-.menu { margin-left: auto; display: flex; align-items: center; gap: 4px; }
-.menu a { text-decoration: none; color: var(--ink); padding: 8px 12px; border-radius: 9px; font-weight: 600; font-size: .95rem; white-space: nowrap; }
-.menu a:hover { background: var(--bg); color: var(--navy); }
-.menu a.aktif { color: var(--teal); background: var(--teal-soft); }
-.menu a.masuk { background: var(--teal); color: #fff; margin-left: 8px; }
-.menu a.masuk:hover { background: var(--teal-2); }
+.merek .sekat { width: 1px; height: 36px; background: var(--line); flex: 0 0 auto; }
+.merek .nama { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.merek .nama b { font-size: 1.3rem; font-weight: 800; letter-spacing: .06em; color: var(--navy); }
+.merek .nama b .aksen { background: linear-gradient(90deg, var(--biru), #d99a1c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.merek .nama small { display: none; margin-top: 4px; color: #6b7280; font-size: .6rem; font-weight: 600; letter-spacing: .17em; text-transform: uppercase; white-space: nowrap; }
+.menu { margin-left: auto; display: flex; align-items: center; gap: 26px; }
+.tautan { position: relative; display: inline-flex; align-items: center; padding: 10px 0; font-weight: 600; font-size: .92rem; color: #1f2937; text-decoration: none; white-space: nowrap; }
+.tautan::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: var(--emas); transform: scaleX(0); transform-origin: left; transition: transform .18s ease; }
+.tautan:hover, .tautan:focus-visible, .tautan.aktif { color: var(--biru); }
+.tautan:hover::after, .tautan.aktif::after { transform: scaleX(1); }
+.tautan:focus-visible, .menu .masuk:focus-visible { outline: 2px solid var(--biru); outline-offset: 3px; border-radius: 6px; }
+.menu .masuk { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 14px; background: var(--biru); color: #fff; font-weight: 700; font-size: .92rem; text-decoration: none; box-shadow: 0 6px 16px rgba(29,63,174,.28); white-space: nowrap; transition: background .15s ease, transform .15s ease; }
+.menu .masuk:hover { background: var(--biru-2); transform: translateY(-1px); }
+.menu .masuk svg { width: 18px; height: 18px; }
 .hamb, .menu-cek { display: none; }
-
+@media (min-width: 1440px) { .merek .nama small { display: block; } }
+@media (max-width: 1320px) { .menu { gap: 20px; } }
 /* ---------- tombol ---------- */
 .tbl { display: inline-block; padding: 12px 22px; border-radius: 11px; border: 2px solid var(--teal); background: var(--teal); color: #fff; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
 .tbl:hover { background: var(--teal-2); border-color: var(--teal-2); }
@@ -170,15 +177,14 @@ details.tanya[open] summary { border-bottom: 1px solid var(--line); margin-botto
   .petugas { padding: 26px 22px; }
   #petaPublik { height: 400px; }
 }
-@media (max-width: 1040px) {
-  .hamb { display: grid; place-items: center; margin-left: auto; width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--line); cursor: pointer; font-size: 1.4rem; background: #fff; }
-  .menu { display: none; position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--line); flex-direction: column; align-items: stretch; padding: 10px 20px 16px; box-shadow: 0 14px 24px rgba(20,39,74,.12); }
+@media (max-width: 1230px) {
+  .hamb { display: grid; place-items: center; margin-left: auto; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); cursor: pointer; font-size: 1.4rem; background: #fff; }
+  .menu { display: none; position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--line); flex-direction: column; align-items: stretch; gap: 0; padding: 8px 20px 18px; box-shadow: 0 14px 24px rgba(20,39,74,.12); max-height: calc(100vh - 70px); overflow-y: auto; }
   .menu-cek:checked ~ .menu { display: flex; }
-  .menu a { padding: 12px 14px; }
-  .menu a.masuk { margin: 8px 0 0; text-align: center; }
-  .merek .nama small { display: none; }
-}
-@media (max-width: 520px) {
+  .tautan { width: 100%; padding: 14px 4px; border-bottom: 1px solid var(--line); font-size: .95rem; }
+  .tautan::after { display: none; }
+  .menu .masuk { margin-top: 14px; justify-content: center; }
+}@media (max-width: 520px) {
   .angka-grid { grid-template-columns: 1fr; }
   .jenis { grid-template-columns: 1fr; }
   .merek .nama b { font-size: .92rem; }
