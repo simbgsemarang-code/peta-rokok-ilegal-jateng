@@ -27,24 +27,23 @@
         </select>
       </div>
     </div>
-    <div class="baris" style="grid-template-columns:1fr 1fr">
-      <div>
-        <label for="tahun">Tahun</label>
-        <select id="tahun">
-          <option value="">Semua tahun</option>
-          @foreach($tahun as $t)<option value="{{ $t }}">{{ $t }}</option>@endforeach
-        </select>
-      </div>
-      <div>
-        <label for="ukur">Warna menurut</label>
-        <select id="ukur">
-          <option value="pelanggar">Jumlah pelanggar</option>
-          <option value="jumlah_batang">Jumlah batang</option>
-          <option value="operasi">Jumlah operasi</option>
-        </select>
-      </div>
+    @php $daftarTahun = collect($tahun)->map(fn ($t) => (int) $t)->unique()->sort()->values(); @endphp
+    <label id="lblTahun">Tahun</label>
+    <div class="seg" id="tahun" role="group" aria-labelledby="lblTahun" style="margin-bottom:10px">
+      <button type="button" data-tahun="" aria-pressed="true">Semua</button>
+      @foreach($daftarTahun as $t)<button type="button" data-tahun="{{ $t }}" aria-pressed="false">{{ $t }}</button>@endforeach
     </div>
-    <label style="font-weight:400"><input type="checkbox" id="dasar" checked> Tampilkan peta dasar (butuh internet)</label>
+    <label id="lblDasar">Peta dasar</label>
+    <div class="seg dua" id="dasar" role="group" aria-labelledby="lblDasar" style="margin-bottom:10px">
+      <button type="button" data-dasar="osm" aria-pressed="true">OSM</button>
+      <button type="button" data-dasar="satelit" aria-pressed="false">Satelit</button>
+    </div>
+    <label for="ukur">Warna menurut</label>
+    <select id="ukur" style="margin-bottom:8px">
+      <option value="pelanggar">Jumlah pelanggar</option>
+      <option value="jumlah_batang">Jumlah batang</option>
+      <option value="operasi">Jumlah operasi</option>
+    </select>
     @if($bolehTitik)
     <label style="font-weight:400;margin-top:4px"><input type="checkbox" id="titik" checked> Titik perkiraan lokasi pelanggar</label>
     <label style="font-weight:400;margin-left:20px"><input type="checkbox" id="titikKab"> sertakan yang hanya setingkat kab/kota</label>
@@ -81,8 +80,19 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   const peta = L.map('peta', { zoomControl: true }).setView([-7.15, 110.2], 8);
-  const dasar = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' });
-  dasar.addTo(peta);
+  // peta dasar: OSM atau citra satelit (Esri World Imagery + label tempat)
+  const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(peta);
+  const satelit = L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Citra &copy; Esri, Maxar, Earthstar Geographics' }),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 })
+  ]);
+  const DASAR = { osm, satelit };
+  let dasarAktif = 'osm', tahunDipilih = '';
+  function pilihDasar(k) {
+    if (k === dasarAktif) return;
+    DASAR[dasarAktif].remove(); DASAR[k].addTo(peta); dasarAktif = k;
+    document.querySelectorAll('#dasar button').forEach(b => b.setAttribute('aria-pressed', b.dataset.dasar === k ? 'true' : 'false'));
+  }
   const DARATAN_JATENG = L.latLngBounds([-8.35, 108.5], [-6.4, 111.75]);
   let lapisan = null, lapKab = null, batas = [], data = null, kabGeo = null, urutMuat = 0;
 
@@ -266,7 +276,7 @@
 
   async function muat(fokus) {
     atur();
-    const tingkat = $('tingkat').value, kb = $('kabPilih').value, t = $('tahun').value, saya = ++urutMuat;
+    const tingkat = $('tingkat').value, kb = $('kabPilih').value, t = tahunDipilih, saya = ++urutMuat;
     $('galat').style.display = 'none'; $('info').style.display = 'none';
     muatTitik(t);
     try {
@@ -291,11 +301,15 @@
   }
 
   if (BOLEH_TITIK) { $('titik').addEventListener('change', gambarTitik); $('titikKab').addEventListener('change', gambarTitik); }
-  $('tahun').addEventListener('change', () => muat(false));
+  document.querySelectorAll('#tahun button').forEach(b => b.addEventListener('click', () => {
+    tahunDipilih = b.dataset.tahun;
+    document.querySelectorAll('#tahun button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    muat(false);
+  }));
+  document.querySelectorAll('#dasar button').forEach(b => b.addEventListener('click', () => pilihDasar(b.dataset.dasar)));
   $('tingkat').addEventListener('change', () => muat(true));
   $('kabPilih').addEventListener('change', () => { gambarTitik(); muat(true); });
   $('ukur').addEventListener('change', () => data && gambar(false));
-  $('dasar').addEventListener('change', e => e.target.checked ? dasar.addTo(peta) : dasar.remove());
   peta.on('popupopen', e => {   // tombol penelusuran di dalam popup
     e.popup.getElement().querySelectorAll('button[data-lv]').forEach(b => b.addEventListener('click', () => {
       $('tingkat').value = b.dataset.lv; $('kabPilih').value = b.dataset.kab; peta.closePopup(); gambarTitik(); muat(true);
