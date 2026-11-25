@@ -25,6 +25,7 @@
       @if($p->peran === 'admin')
         <div class="grup">Admin</div>
         <a href="{{ route('impor') }}" class="{{ request()->routeIs('impor*') ? 'aktif' : '' }}">Impor data operasi</a>
+        <a href="{{ route('master') }}" class="{{ request()->routeIs('master*') ? 'aktif' : '' }}">Data master</a>
         <a href="{{ route('pengaturan') }}" class="{{ request()->routeIs('pengaturan*') ? 'aktif' : '' }}">Pengaturan</a>
       @endif
     </nav>

@@ -18,6 +18,15 @@ info "1/5 Mengekstrak $(basename "$ARSIP") ($(du -h "$ARSIP" | cut -f1), dibuat 
 tar xzf "$ARSIP" -C "$APP_DIR"
 cd "$APP_DIR/web"
 
+info "1b/5 Basis data: audit data master (idempotent)"
+if [[ -f "$APP_DIR/db/05_audit_master.sql" ]]; then
+  if sudo -u postgres psql -d peta_rokok_ilegal -v ON_ERROR_STOP=1 -q -f "$APP_DIR/db/05_audit_master.sql" >/dev/null 2>&1; then
+    echo "  trigger audit master terpasang"
+  else
+    echo "  PERINGATAN: db/05_audit_master.sql gagal dijalankan; menu Data Master tetap berfungsi tetapi perubahan master belum tercatat di log audit." >&2
+  fi
+fi
+
 info "2/5 Izin berkas"
 chown -R www-data:www-data storage bootstrap/cache
 chown root:www-data .env
@@ -38,7 +47,7 @@ systemctl reload "php$PHPV-fpm"
 info "5/5 Uji halaman (dari server sendiri)"
 DOMAIN="$(grep -E '^APP_URL=' .env | head -1 | sed -E 's#"##g; s#^APP_URL=https?://##; s#/.*$##')"
 gagal=0
-for jalur in / /tentang /kenali-rokok-ilegal /data /peta-publik /kontak /masuk /data-publik/kabkota /data-publik/sebaran; do
+for jalur in / /tentang /kenali-rokok-ilegal /data /peta-publik /kontak /masuk /data-publik/kabkota /data-publik/sebaran; do   # /master butuh login, diuji lewat peramban
   kode="$(curl -sk -o /dev/null -w '%{http_code}' --max-time 20 -H "Host: $DOMAIN" "https://127.0.0.1$jalur" || true)"
   printf '  %-26s %s\n' "$jalur" "$kode"
   [[ "$kode" == "200" ]] || gagal=1

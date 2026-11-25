@@ -22,4 +22,20 @@ class Audit
             return $kerja();
         });
     }
+
+    /**
+     * Mencatat perubahan data operasi secara manual ke log audit. Dipakai untuk tabel penindakan yang tidak
+     * memakai trigger (impor Excel memasukkan ribuan baris). Isi $lama/$baru JANGAN memuat data pribadi.
+     */
+    public static function catat(string $aksi, string $tabel, string|int|null $idBaris, ?array $lama = null, ?array $baru = null): void
+    {
+        DB::table('app.log_audit')->insert([
+            'pengguna_id' => Auth::id(),
+            'aksi' => $aksi,
+            'tabel' => $tabel,
+            'id_baris' => $idBaris === null ? null : (string) $idBaris,
+            'data_lama' => $lama === null ? null : json_encode($lama, JSON_UNESCAPED_UNICODE),
+            'data_baru' => $baru === null ? null : json_encode($baru, JSON_UNESCAPED_UNICODE),
+        ]);
+    }
 }

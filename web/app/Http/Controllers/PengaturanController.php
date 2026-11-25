@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 
 class PengaturanController extends Controller
 {
-    private const TAB = ['tarif', 'bobot', 'pendukung', 'merek', 'pengguna', 'audit'];
+    private const TAB = ['bobot', 'pendukung', 'pengguna', 'audit'];
 
     private const KOMPONEN = [
         'estimasi_kerugian' => 'Estimasi kerugian',
@@ -23,13 +23,13 @@ class PengaturanController extends Controller
 
     public function index(Request $request)
     {
-        $tab = in_array($request->query('tab'), self::TAB, true) ? $request->query('tab') : 'tarif';
+        if (in_array($request->query('tab'), ['tarif', 'merek'], true)) {   // dipindah ke menu Data Master
+            return redirect()->route('master', ['tab' => $request->query('tab')]);
+        }
+        $tab = in_array($request->query('tab'), self::TAB, true) ? $request->query('tab') : 'bobot';
         $data = ['tab' => $tab];
 
         switch ($tab) {
-            case 'tarif':
-                $data['tarif'] = DB::select('SELECT * FROM ref.tarif ORDER BY berlaku_mulai DESC, jenis_produk, golongan');
-                break;
             case 'bobot':
                 $bobot = [];
                 foreach (DB::select('SELECT DISTINCT ON (komponen) komponen, bobot_persen FROM analisis.bobot_skor ORDER BY komponen, berlaku_mulai DESC, id DESC') as $r) {
@@ -46,12 +46,6 @@ class PengaturanController extends Controller
                 }
                 $data += ['tahun' => $tahun, 'nilai' => $nilai, 'kabkota' => DB::select('SELECT kode, nama FROM ref.kabkota ORDER BY kode')];
                 break;
-            case 'merek':
-                $data['merek'] = DB::select('SELECT id, nama_baku, array_to_string(alias, \', \') AS alias FROM ref.merek ORDER BY nama_baku');
-                $data['belum'] = DB::select('
-                    SELECT upper(trim(merek_asli)) AS merek, sum(jumlah_batang) AS batang, count(*) AS baris
-                    FROM penindakan.temuan_merek WHERE merek_id IS NULL GROUP BY 1 ORDER BY batang DESC LIMIT 40');
-                break;
             case 'pengguna':
                 $data['pengguna'] = DB::select('SELECT p.id, p.nama, p.email, p.peran, p.kode_kab, p.aktif, k.nama AS kab FROM app.pengguna p LEFT JOIN ref.kabkota k ON k.kode = p.kode_kab ORDER BY p.id');
                 $data['kabkota'] = DB::select('SELECT kode, nama FROM ref.kabkota ORDER BY kode');
@@ -64,34 +58,6 @@ class PengaturanController extends Controller
         }
 
         return view('pengaturan', $data);
-    }
-
-    public function simpanTarif(Request $request)
-    {
-        $d = $request->validate([
-            'berlaku_mulai' => ['required', 'date'],
-            'jenis_produk' => ['required', 'string', 'max:20'],
-            'golongan' => ['required', 'string', 'max:30'],
-            'tarif_cukai_per_batang' => ['required', 'numeric', 'min:0', 'max:1000000'],
-            'hje_minimum_per_batang' => ['nullable', 'numeric', 'min:0', 'max:1000000'],
-            'pajak_rokok_persen' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'ppn_ht_persen' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'dasar_regulasi' => ['nullable', 'string', 'max:300'],
-        ], ['required' => 'Kolom :attribute wajib diisi.']);
-
-        Audit::jalankan(fn () => DB::statement('
-            INSERT INTO ref.tarif (berlaku_mulai, jenis_produk, golongan, tarif_cukai_per_batang, hje_minimum_per_batang, pajak_rokok_persen, ppn_ht_persen, dasar_regulasi, diubah_oleh, diubah_pada)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now())
-            ON CONFLICT (berlaku_mulai, jenis_produk, golongan) DO UPDATE SET
-              tarif_cukai_per_batang = EXCLUDED.tarif_cukai_per_batang, hje_minimum_per_batang = EXCLUDED.hje_minimum_per_batang,
-              pajak_rokok_persen = EXCLUDED.pajak_rokok_persen, ppn_ht_persen = EXCLUDED.ppn_ht_persen,
-              dasar_regulasi = EXCLUDED.dasar_regulasi, diubah_oleh = EXCLUDED.diubah_oleh, diubah_pada = now()', [
-            $d['berlaku_mulai'], strtoupper(trim($d['jenis_produk'])), trim($d['golongan']), $d['tarif_cukai_per_batang'],
-            $d['hje_minimum_per_batang'] ?? null, $d['pajak_rokok_persen'] ?? null, $d['ppn_ht_persen'] ?? null,
-            $d['dasar_regulasi'] ?? null, Auth::id(),
-        ]));
-
-        return redirect()->route('pengaturan', ['tab' => 'tarif'])->with('info', 'Tarif disimpan.');
     }
 
     public function simpanBobot(Request $request)
@@ -143,28 +109,6 @@ class PengaturanController extends Controller
         });
 
         return redirect()->route('pengaturan', ['tab' => 'pendukung', 'tahun' => $d['tahun']])->with('info', "Data pendukung {$n} kab/kota disimpan untuk tahun {$d['tahun']}.");
-    }
-
-    public function simpanMerek(Request $request)
-    {
-        $d = $request->validate([
-            'nama_baku' => ['required', 'string', 'max:80'],
-            'alias' => ['nullable', 'string', 'max:500'],
-        ], ['nama_baku.required' => 'Nama baku merek wajib diisi.']);
-        $nama = mb_strtoupper(trim($d['nama_baku']));
-        $alias = array_values(array_unique(array_filter(array_map(
-            fn ($a) => mb_strtoupper(trim($a)), explode(',', (string) ($d['alias'] ?? ''))
-        ), fn ($a) => $a !== '' && $a !== $nama)));
-        $literal = '{'.implode(',', array_map(fn ($a) => '"'.str_replace(['\\', '"'], ['\\\\', '\\"'], $a).'"', $alias)).'}';
-
-        $diterapkan = Audit::jalankan(function () use ($nama, $literal) {
-            DB::statement('INSERT INTO ref.merek (nama_baku, alias) VALUES (?, ?::text[]) ON CONFLICT (nama_baku) DO UPDATE SET alias = EXCLUDED.alias', [$nama, $literal]);
-
-            // Terapkan ke temuan yang sebelumnya belum dikenali
-            return DB::update('UPDATE penindakan.temuan_merek SET merek_id = ref.fn_merek_id(merek_asli) WHERE merek_id IS NULL AND ref.fn_merek_id(merek_asli) IS NOT NULL');
-        });
-
-        return redirect()->route('pengaturan', ['tab' => 'merek'])->with('info', "Merek {$nama} disimpan; {$diterapkan} temuan lama ikut dinormalkan.");
     }
 
     public function simpanPengguna(Request $request)

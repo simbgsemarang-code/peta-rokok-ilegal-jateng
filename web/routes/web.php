@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ImporController;
 use App\Http\Controllers\KerugianController;
+use App\Http\Controllers\MasterController;
 use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\PetaController;
 use App\Http\Controllers\PublikController;
@@ -55,11 +56,23 @@ Route::middleware(['auth', 'aktif'])->group(function () {
         Route::post('/rekomendasi/{id}', [RekomendasiController::class, 'sunting'])->whereNumber('id')->name('rekomendasi.sunting');
         Route::post('/rekomendasi/{id}/status', [RekomendasiController::class, 'status'])->whereNumber('id')->name('rekomendasi.status');
 
+        // Data Master: data operasi (sheet DATA gabungan) dan master dinamis (merek, tarif, surveyor, titik acuan)
+        Route::get('/master', [MasterController::class, 'index'])->name('master');
+        Route::get('/master/operasi/baru', [MasterController::class, 'operasiBaru'])->name('master.operasi.baru');
+        Route::post('/master/operasi', [MasterController::class, 'operasiSimpan'])->name('master.operasi.simpan');
+        Route::get('/master/operasi/{id}', [MasterController::class, 'operasiTampil'])->whereNumber('id')->name('master.operasi.tampil');
+        Route::post('/master/operasi/{id}', [MasterController::class, 'operasiUbah'])->whereNumber('id')->name('master.operasi.ubah');
+        Route::post('/master/operasi/{id}/aktif', [MasterController::class, 'operasiAktif'])->whereNumber('id')->name('master.operasi.aktif');
+        Route::post('/master/operasi/{id}/hapus', [MasterController::class, 'operasiHapus'])->whereNumber('id')->name('master.operasi.hapus');
+        Route::post('/master/operasi/{id}/pelanggar', [MasterController::class, 'pelanggarTambah'])->whereNumber('id')->name('master.pelanggar.tambah');
+        Route::post('/master/pelanggar/{pid}', [MasterController::class, 'pelanggarUbah'])->whereNumber('pid')->name('master.pelanggar.ubah');
+        Route::post('/master/pelanggar/{pid}/hapus', [MasterController::class, 'pelanggarHapus'])->whereNumber('pid')->name('master.pelanggar.hapus');
+        Route::post('/master/{entitas}', [MasterController::class, 'simpan'])->where('entitas', 'merek|tarif|surveyor|poi')->name('master.simpan');
+        Route::post('/master/{entitas}/{id}/hapus', [MasterController::class, 'hapus'])->where('entitas', 'merek|tarif|surveyor|poi')->name('master.hapus');
+
         Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
-        Route::post('/pengaturan/tarif', [PengaturanController::class, 'simpanTarif'])->name('pengaturan.tarif');
         Route::post('/pengaturan/bobot', [PengaturanController::class, 'simpanBobot'])->name('pengaturan.bobot');
         Route::post('/pengaturan/pendukung', [PengaturanController::class, 'simpanPendukung'])->name('pengaturan.pendukung');
-        Route::post('/pengaturan/merek', [PengaturanController::class, 'simpanMerek'])->name('pengaturan.merek');
         Route::post('/pengaturan/pengguna', [PengaturanController::class, 'simpanPengguna'])->name('pengaturan.pengguna');
         Route::post('/pengaturan/pengguna/{id}', [PengaturanController::class, 'ubahPengguna'])->whereNumber('id')->name('pengaturan.pengguna.ubah');
     });

@@ -111,6 +111,9 @@ details > summary { cursor: pointer; color: var(--teal); font-weight: 600; }
 .seg button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
 .seg button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 .seg.dua button { flex: 1 1 0; }
+.seg a { flex: 0 1 auto; min-width: 54px; padding: 7px 12px; text-align: center; border-radius: 8px; border: 1px solid #c9d0dc; background: #fff; color: var(--navy); font-size: 13px; font-weight: 600; text-decoration: none; }
+.seg a:hover { border-color: var(--navy); }
+.seg a[aria-current="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
 .panel { background: var(--card); border-left: 1px solid var(--line); padding: 16px; overflow-y: auto; }
 .legenda { background: rgba(255,255,255,.94); padding: 8px 10px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font-size: 12px; line-height: 1.6; }
 .legenda i { display: inline-block; width: 16px; height: 12px; margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.2); }

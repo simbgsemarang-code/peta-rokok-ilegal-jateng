@@ -4,41 +4,14 @@
 @use('App\Support\Format')
 <div class="kepala"><div><h1>Pengaturan</h1><p>Hanya admin. Setiap perubahan tercatat di log audit.</p></div></div>
 <div class="tabs">
-  @foreach(['tarif' => 'Tarif', 'bobot' => 'Bobot skor', 'pendukung' => 'Data pendukung', 'merek' => 'Merek', 'pengguna' => 'Pengguna', 'audit' => 'Log audit'] as $k => $n)
+  @foreach(['bobot' => 'Bobot skor', 'pendukung' => 'Data pendukung', 'pengguna' => 'Pengguna', 'audit' => 'Log audit'] as $k => $n)
     <a href="{{ route('pengaturan', ['tab' => $k]) }}" class="{{ $tab === $k ? 'aktif' : '' }}">{{ $n }}</a>
   @endforeach
+  <a href="{{ route('master', ['tab' => 'tarif']) }}">Tarif ↗</a>
+  <a href="{{ route('master', ['tab' => 'merek']) }}">Merek ↗</a>
 </div>
 
-@if($tab === 'tarif')
-  <div class="card tabel">
-    <h2>Tarif cukai untuk estimasi kerugian</h2>
-    <p class="muted" style="margin-top:0">Isi sesuai peraturan yang berlaku. Aplikasi tidak membawa angka tarif bawaan agar tidak ada angka yang salah terpakai.</p>
-    @if(empty($tarif))<div class="kosong">Belum ada tarif.</div>@else
-    <table><thead><tr><th>Berlaku mulai</th><th>Produk</th><th>Golongan</th><th class="n">Cukai/batang</th><th class="n">HJE minimum</th><th class="n">Pajak rokok %</th><th class="n">PPN HT %</th><th>Dasar regulasi</th></tr></thead>
-    <tbody>@foreach($tarif as $t)<tr><td>{{ $t->berlaku_mulai }}</td><td>{{ $t->jenis_produk }}</td><td>{{ $t->golongan }}</td><td class="n">{{ Format::angka($t->tarif_cukai_per_batang, 2) }}</td><td class="n">{{ Format::angka($t->hje_minimum_per_batang, 2) }}</td><td class="n">{{ Format::angka($t->pajak_rokok_persen, 2) }}</td><td class="n">{{ Format::angka($t->ppn_ht_persen, 2) }}</td><td>{{ $t->dasar_regulasi }}</td></tr>@endforeach</tbody></table>
-    @endif
-  </div>
-  <div class="card">
-    <h2>Tambah atau perbarui tarif</h2>
-    <form method="post" action="{{ route('pengaturan.tarif') }}">
-      @csrf
-      <div class="baris">
-        <div><label for="berlaku_mulai">Berlaku mulai</label><input id="berlaku_mulai" type="date" name="berlaku_mulai" value="{{ old('berlaku_mulai') }}" required></div>
-        <div><label for="jenis_produk">Jenis produk</label><input id="jenis_produk" type="text" name="jenis_produk" placeholder="SKM / SPM / SKT" value="{{ old('jenis_produk') }}" required></div>
-        <div><label for="golongan">Golongan</label><input id="golongan" type="text" name="golongan" placeholder="mis. I" value="{{ old('golongan') }}" required></div>
-        <div><label for="tarif_cukai_per_batang">Tarif cukai per batang (Rp)</label><input id="tarif_cukai_per_batang" type="number" step="any" min="0" name="tarif_cukai_per_batang" value="{{ old('tarif_cukai_per_batang') }}" required></div>
-      </div>
-      <div class="baris">
-        <div><label for="hje_minimum_per_batang">HJE minimum per batang (Rp)</label><input id="hje_minimum_per_batang" type="number" step="any" min="0" name="hje_minimum_per_batang" value="{{ old('hje_minimum_per_batang') }}"><div class="help">Kosongkan bila hanya menghitung cukai.</div></div>
-        <div><label for="pajak_rokok_persen">Pajak rokok (%)</label><input id="pajak_rokok_persen" type="number" step="any" min="0" max="100" name="pajak_rokok_persen" value="{{ old('pajak_rokok_persen') }}"></div>
-        <div><label for="ppn_ht_persen">PPN hasil tembakau (%)</label><input id="ppn_ht_persen" type="number" step="any" min="0" max="100" name="ppn_ht_persen" value="{{ old('ppn_ht_persen') }}"></div>
-        <div><label for="dasar_regulasi">Dasar regulasi</label><input id="dasar_regulasi" type="text" name="dasar_regulasi" maxlength="300" value="{{ old('dasar_regulasi') }}"><div class="help">Nomor dan tahun PMK/peraturan.</div></div>
-      </div>
-      <button class="btn" type="submit">Simpan tarif</button>
-    </form>
-  </div>
-
-@elseif($tab === 'bobot')
+@if($tab === 'bobot')
   <div class="card">
     <h2>Bobot skor prioritas</h2>
     <p class="muted" style="margin-top:0">Jumlah harus 100%. Komponen yang belum tersedia datanya dilewati dan bobotnya dibagi ke komponen lain saat menghitung.</p>
@@ -79,34 +52,6 @@
       </table></div>
       <button class="btn" type="submit" style="margin-top:12px">Simpan data tahun {{ $tahun }}</button>
     </form>
-  </div>
-
-@elseif($tab === 'merek')
-  <div class="grid g2">
-    <div class="card tabel">
-      <h2>Daftar merek baku</h2>
-      <table><thead><tr><th>Merek baku</th><th>Alias (penulisan lain)</th></tr></thead>
-      <tbody>@foreach($merek as $m)<tr><td><b>{{ $m->nama_baku }}</b></td><td>{{ $m->alias ?: '–' }}</td></tr>@endforeach</tbody></table>
-    </div>
-    <div>
-      <div class="card">
-        <h2>Tambah atau ubah merek</h2>
-        <form method="post" action="{{ route('pengaturan.merek') }}">
-          @csrf
-          <div style="margin-bottom:10px"><label for="nama_baku">Nama baku</label><input id="nama_baku" type="text" name="nama_baku" maxlength="80" required></div>
-          <div style="margin-bottom:10px"><label for="alias">Alias, pisahkan dengan koma</label><textarea id="alias" name="alias" maxlength="500" placeholder="HUMMER, HUMER MERAH"></textarea><div class="help">Bila nama baku sudah ada, aliasnya diganti dengan isian ini. Temuan lama yang cocok ikut dinormalkan.</div></div>
-          <button class="btn" type="submit">Simpan merek</button>
-        </form>
-      </div>
-      <div class="card tabel">
-        <h2>Merek di data yang belum dinormalkan</h2>
-        @if(empty($belum))<div class="kosong">Semua merek sudah terpetakan.</div>@else
-        <table><thead><tr><th>Penulisan di data</th><th class="n">Batang</th><th class="n">Baris</th></tr></thead>
-        <tbody>@foreach($belum as $b)<tr><td>{{ $b->merek }}</td><td class="n">{{ Format::angka($b->batang) }}</td><td class="n">{{ Format::angka($b->baris) }}</td></tr>@endforeach</tbody></table>
-        <p class="muted">40 teratas menurut jumlah batang. Merek yang belum dinormalkan tetap dihitung apa adanya di rekap.</p>
-        @endif
-      </div>
-    </div>
   </div>
 
 @elseif($tab === 'pengguna')

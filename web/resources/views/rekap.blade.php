@@ -69,6 +69,6 @@
   </table>
 </div>
 @if($tab === 'bulanan')<p class="muted">Bulan diambil dari tanggal mulai operasi; operasi tanpa tanggal tidak ikut dihitung di tabel ini.</p>@endif
-@if($tab === 'merek')<p class="muted">Penulisan merek diseragamkan lewat daftar merek dan alias (Pengaturan → Merek). Jumlah pelanggar per merek dapat tumpang tindih karena satu pelanggar bisa membawa beberapa merek.</p>@endif
+@if($tab === 'merek')<p class="muted">Penulisan merek diseragamkan lewat daftar merek dan alias (Data master → Merek). Jumlah pelanggar per merek dapat tumpang tindih karena satu pelanggar bisa membawa beberapa merek.</p>@endif
 @endif
 @endsection

@@ -32,7 +32,7 @@
     <div class="notif warn"><b>Data jumlah outlet rokok baru ada untuk {{ $jumlahPendukung }} dari 35 kab/kota.</b> Kab/kota tanpa data itu belum dapat dihitung kerugiannya. @if($admin)Isi di <a href="{{ route('pengaturan', ['tab' => 'pendukung']) }}">Pengaturan → Data pendukung</a>.@endif</div>
   @endif
   @if(! ($info['tarif'] ?? null))
-    <div class="notif warn"><b>Tarif cukai belum dipilih</b> pada versi ini, sehingga nilai rupiah belum dapat dihitung. @if($admin)Isi tarif di <a href="{{ route('pengaturan', ['tab' => 'tarif']) }}">Pengaturan → Tarif</a>, lalu hitung ulang.@endif</div>
+    <div class="notif warn"><b>Tarif cukai belum dipilih</b> pada versi ini, sehingga nilai rupiah belum dapat dihitung. @if($admin)Isi tarif di <a href="{{ route('master', ['tab' => 'tarif']) }}">Data master → Tarif</a>, lalu hitung ulang.@endif</div>
   @endif
 
   <div class="grid g4" style="margin-bottom:14px">
