@@ -36,7 +36,7 @@ PHPV="$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')"
 systemctl reload "php$PHPV-fpm"
 
 info "5/5 Uji halaman (dari server sendiri)"
-DOMAIN="$(grep -E '^APP_URL=' .env | head -1 | sed -E 's#^APP_URL=https?://##; s#/.*$##; s#"##g')"
+DOMAIN="$(grep -E '^APP_URL=' .env | head -1 | sed -E 's#"##g; s#^APP_URL=https?://##; s#/.*$##')"
 gagal=0
 for jalur in / /tentang /kenali-rokok-ilegal /data /peta-publik /kontak /masuk /data-publik/kabkota /data-publik/sebaran; do
   kode="$(curl -sk -o /dev/null -w '%{http_code}' --max-time 20 -H "Host: $DOMAIN" "https://127.0.0.1$jalur" || true)"
