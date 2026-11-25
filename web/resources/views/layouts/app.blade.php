@@ -6,7 +6,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>@yield('judul', 'Peta') — {{ config('publik.nama') }}</title>
 @include('partials.ikon')
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ substr(md5_file(public_path('css/app.css')), 0, 10) }}">
 @stack('kepala')
 </head>
 <body>

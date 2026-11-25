@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Masuk — {{ config('publik.nama') }}</title>
 @include('partials.ikon')
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ substr(md5_file(public_path('css/app.css')), 0, 10) }}">
 </head>
 <body>
 <div class="masuk">

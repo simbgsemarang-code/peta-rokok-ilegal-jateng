@@ -9,7 +9,7 @@
 <meta property="og:site_name" content="{{ config('publik.nama') }}">
 <meta property="og:type" content="website">
 @include('partials.ikon')
-<link rel="stylesheet" href="{{ asset('css/publik.css') }}">
+<link rel="stylesheet" href="{{ asset('css/publik.css') }}?v={{ substr(md5_file(public_path('css/publik.css')), 0, 10) }}">
 @stack('kepala')
 </head>
 <body>
