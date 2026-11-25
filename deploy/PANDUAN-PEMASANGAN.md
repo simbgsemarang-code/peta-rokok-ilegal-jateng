@@ -147,3 +147,7 @@ Perubahan struktur basis data (berkas `db/*.sql` baru) tidak otomatis dijalankan
 | Peta kosong / galat "PostGIS" | `sudo -u postgres psql -d peta_rokok_ilegal -c "SELECT postgis_version()"` |
 | Unggah Excel gagal | batas 40 MB di nginx dan `/etc/php/*/fpm/conf.d/90-peta.ini`; `systemctl restart php8.3-fpm` |
 | Sertifikat gagal | DNS belum mengarah ke VPS, atau port 80 tertutup |
+
+## 11. Perlindungan SSH (fail2ban)
+
+Setelah sistem berjalan: `sudo bash /var/www/peta/deploy/pasang-fail2ban.sh`. Skrip memblokir alamat yang gagal login SSH 5 kali dalam 10 menit (1 jam, makin lama untuk pelanggar berulang). **Tanpa jail nginx**: di belakang proxy penyedia nginx hanya melihat alamat proxy, sehingga jail nginx akan memblokir semua pengunjung. Bila Anda sendiri terblokir, masuk lewat **Konsol** di panel VPS dan jalankan `fail2ban-client set sshd unbanip ALAMAT_IP_ANDA`. Periksa: `fail2ban-client status sshd`.
